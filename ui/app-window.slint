@@ -1,0 +1,75 @@
+import { Button, VerticalBox, HorizontalBox } from "std-widgets.slint";
+import { Route } from "route.slint";
+import { HomePage } from "pages/home-page.slint";
+
+
+export component AppWindow inherits Window {
+    preferred-width: 700px;
+    preferred-height: 550px;
+    title: "";
+
+    in-out property <Route> current-route: Route.Home;
+    callback navigate-to(Route);
+    callback go-back();
+    in-out property <bool> sidebar-visible: true;
+
+    HorizontalBox {
+        if root.sidebar-visible: Rectangle {
+            width: 200px;
+            background: #1a1a2e;
+            VerticalBox {
+                padding: 16px;
+                spacing: 12px;
+                Text {
+                    text: "";
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: white;
+                }
+
+                Rectangle {
+                    height: 1px;
+                    background: #333;
+                }
+
+                Button {
+                    text: "A";
+                    clicked => {
+                        root.navigate-to(Route.Home);
+                    }
+                }
+
+                Text {
+                    text: "v1.0.0";
+                    font-size: 11px;
+                    color: #555;
+                    horizontal-alignment: center;
+                }
+            }
+        }
+
+        Rectangle {
+            background: #0f0f1a;
+            VerticalBox {
+                HorizontalBox {
+                    padding: 8px;
+                    spacing: 12px;
+                    alignment: start;
+                    Button {
+                        text: root.sidebar-visible ? "◀" : "▶";
+                        clicked => {
+                            root.sidebar-visible = !root.sidebar-visible;
+                        }
+                    }
+                }
+
+                if root.current-route == Route.Home: HomePage { }
+                if root.current-route == Route.Favorite: FavoritePage {
+                    go-back() => {
+                        root.go-back();
+                    }
+                }
+            }
+        }
+    }
+}

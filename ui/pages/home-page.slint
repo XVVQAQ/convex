@@ -1,0 +1,24 @@
+import { Button, VerticalBox, HorizontalBox } from "std-widgets.slint";
+import { Route } from "../route.slint";
+
+export component HomePage {
+    callback navigate-to(Route);
+
+    VerticalBox {
+        padding: 24px;
+        spacing: 16px;
+
+        Text {
+            text: "";
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+        }
+
+        Text {
+            text: "";
+            font-size: 14px;
+            color: #888;
+        }
+    }
+}
