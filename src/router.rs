@@ -1,8 +1,10 @@
+use std::fmt::Debug;
+
 pub struct Router<T: Copy + PartialEq> {
     history: Vec<T>,
 }
 
-impl<T: Copy + PartialEq + std::fmt::Debug> Router<T> {
+impl<T: Copy + PartialEq + Debug> Router<T> {
     pub fn new(initial: T) -> Self {
         Self {
             history: vec![initial],
@@ -13,28 +15,26 @@ impl<T: Copy + PartialEq + std::fmt::Debug> Router<T> {
         self.history.last().copied().unwrap()
     }
 
-    pub fn depth(&self) -> usize {
-        self.history.len()
-    }
-
-    pub fn navigate_to(&mut self, route: T) {
-        if self.current() == route {
+    /// 统一导航：is_root=true 时清空栈，false 时入栈
+    pub fn navigate_to(&mut self, route: T, is_root: bool) {
+        if !self.should_navigate(route) {
             return;
         }
+        if is_root {
+            self.history.clear();
+        }
         self.history.push(route);
-    //    println!("🔀 Navigate → (depth: {})", self.depth());
-    }
-
-    pub fn navigate_to_root(&mut self, route: T) {
-        self.history.clear();
-        self.history.push(route);
-    //    println!("🏠 Root → {:?} (depth: 1)", route);
+        log::info!("navigate (depth: {})", self.history.len());
     }
 
     pub fn go_back(&mut self) {
         if self.history.len() > 1 {
             self.history.pop();
-    //    println!("🔙 Back (depth: {})", self.depth());
+            log::info!("go back (depth: {})", self.history.len());
         }
+    }
+
+    fn should_navigate(&self, route: T) -> bool {
+        self.current() != route
     }
 }

@@ -1,17 +1,23 @@
 import { Button, VerticalBox, HorizontalBox } from "std-widgets.slint";
-import { Route } from "route.slint";
+import { Route, RouteConfig } from "route.slint";
 import { HomePage } from "pages/home-page.slint";
-
+import { FavoritePage } from "pages/favorite-page.slint";
+import { LogPage } from "pages/log-page.slint";
 
 export component AppWindow inherits Window {
     preferred-width: 700px;
     preferred-height: 550px;
-    title: "";
+    title: "Comic App";
 
     in-out property <Route> current-route: Route.Home;
+
     callback navigate-to(Route);
     callback go-back();
+
     in-out property <bool> sidebar-visible: true;
+    in-out property <[Route]> root-routes: RouteConfig.root-routes;
+
+    in-out property <[string]> app-log: [];
 
     HorizontalBox {
         if root.sidebar-visible: Rectangle {
@@ -21,7 +27,7 @@ export component AppWindow inherits Window {
                 padding: 16px;
                 spacing: 12px;
                 Text {
-                    text: "";
+                    text: "📚 Comics";
                     font-size: 20px;
                     font-weight: 700;
                     color: white;
@@ -33,10 +39,29 @@ export component AppWindow inherits Window {
                 }
 
                 Button {
-                    text: "A";
+                    text: "🏠 Home";
                     clicked => {
                         root.navigate-to(Route.Home);
                     }
+                }
+
+                Button {
+                    text: "⭐ Favorites";
+                    clicked => {
+                        root.navigate-to(Route.Favorite);
+                    }
+                }
+
+                Button {
+                    text: "📋 Log";
+                    clicked => {
+                        root.navigate-to(Route.Log);
+                    }
+                }
+
+                Button {
+                    text: "⚙️ Settings";
+                    enabled: false;
                 }
 
                 Text {
@@ -65,6 +90,12 @@ export component AppWindow inherits Window {
 
                 if root.current-route == Route.Home: HomePage { }
                 if root.current-route == Route.Favorite: FavoritePage {
+                    go-back() => {
+                        root.go-back();
+                    }
+                }
+                if root.current-route == Route.Log: LogPage {
+                    log-entries: root.app-log;
                     go-back() => {
                         root.go-back();
                     }

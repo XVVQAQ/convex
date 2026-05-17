@@ -1,4 +1,14 @@
 export enum Route {
     Home,
+    Favorite,
+    Log,
 }
 
+export global RouteConfig {
+    in-out property <[Route]> root-routes:
+    [
+        Route.Home,
+        Route.Favorite,
+        Route.Log,
+    ];
+}

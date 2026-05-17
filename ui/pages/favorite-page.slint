@@ -1,0 +1,31 @@
+import { Button, VerticalBox } from "std-widgets.slint";
+
+export component FavoritePage {
+    callback go-back();
+
+    VerticalBox {
+        padding: 24px;
+        spacing: 16px;
+        alignment: center;
+
+        Text {
+            text: "⭐ Favorites";
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+        }
+
+        Text {
+            text: "Your favorite comics will appear here.";
+            font-size: 14px;
+            color: #888;
+        }
+
+        Button {
+            text: "⬅️ Back";
+            clicked => {
+                root.go-back();
+            }
+        }
+    }
+}

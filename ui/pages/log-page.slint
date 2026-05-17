@@ -1,0 +1,46 @@
+import { Button, VerticalBox, HorizontalBox } from "std-widgets.slint";
+
+export component LogPage {
+    callback go-back();
+    in-out property <[string]> log-entries: [];
+
+    VerticalBox {
+        padding: 16px;
+        spacing: 8px;
+
+        HorizontalBox {
+            spacing: 12px;
+            alignment: start;
+            Button {
+                text: "⬅️ Back";
+                clicked => {
+                    root.go-back();
+                }
+            }
+
+            Text {
+                text: "📋 App Log";
+                font-size: 20px;
+                font-weight: 700;
+                color: white;
+            }
+        }
+
+        Rectangle {
+            background: #111;
+            border-radius: 6px;
+            border-width: 1px;
+            border-color: #333;
+
+            VerticalBox {
+                padding: 8px;
+                for entry in root.log-entries: Text {
+                    text: entry;
+                    font-size: 11px;
+                    color: #0f0;
+                    horizontal-alignment: left;
+                }
+            }
+        }
+    }
+}
