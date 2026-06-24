@@ -1,0 +1,190 @@
+component MenuItem inherits Rectangle {
+    in property <string> title;
+    in property <image> icon;
+    in property <bool> expanded;
+    in property <bool> active;
+
+    callback clicked();
+
+    min-width: expanded ? 220px : 44px;
+    min-height: 44px;
+    border-radius: 12px;
+    background: item_area.has-hover ? #f1f3f4 : transparent;
+    animate background { duration: 150ms; }
+
+    states [
+        active-active when active: {
+            background: #e8f0fe;
+        }
+        active-pressed when active && item_area.pressed: {
+            background: #d2e3fc;
+        }
+        pressed when !active && item_area.pressed: {
+            background: #d2e3fc;
+        }
+    ]
+
+    item_area := TouchArea {
+        width: 100%;
+        height: 100%;
+        mouse-cursor: MouseCursor.pointer;
+
+        clicked => {
+            root.clicked()
+        }
+
+        HorizontalLayout {
+            padding-left: 12px;
+            padding-right: 12px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            spacing: 12px;
+            alignment: start;
+
+            Rectangle {
+                width: 28px;
+                height: 28px;
+                border-radius: 6px;
+                background: active ? #1a73e8 : transparent;
+                animate background { duration: 150ms; }
+
+                Image {
+                    width: 20px;
+                    height: 20px;
+                    source: icon;
+                    colorize: active ? white : #5f6368;
+                }
+            }
+
+            Text {
+                visible: expanded;
+                text: title;
+                color: active ? #1a73e8 : #202124;
+                font-size: 14px;
+                font-weight: active ? 600 : 400;
+                vertical-alignment: center;
+                horizontal-alignment: start;
+                overflow: elide;
+            }
+        }
+    }
+}
+
+
+component SideBar inherits Rectangle {
+    in property <length> window-width;
+
+    private property <bool> expanded: window-width >= 800px;
+
+    width: expanded ? 250px : 64px;
+    background: #fafafa;
+    drop-shadow-offset-x: 2px;
+    drop-shadow-offset-y: 0px;
+    drop-shadow-blur: 8px;
+    drop-shadow-color: rgba(0, 0, 0, 0.06);
+    animate width {
+        duration: 200ms;
+        easing: ease-out;
+    }
+
+    Rectangle {
+        x: parent.width - 1px;
+        width: 1px;
+        height: 100%;
+        background: #e0e0e0;
+    }
+
+    VerticalLayout {
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        spacing: 4px;
+        height: 100%;
+
+        Rectangle {
+            min-height: 48px;
+
+            HorizontalLayout {
+                padding-left: 12px;
+                padding-right: 12px;
+                padding-top: 8px;
+                padding-bottom: 8px;
+                spacing: 12px;
+                alignment: start;
+
+                Rectangle {
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 6px;
+                    background: #1a73e8;
+
+                    Text {
+                        text: "C";
+                        color: white;
+                        font-size: 16px;
+                        font-weight: 700;
+                        horizontal-alignment: center;
+                        vertical-alignment: center;
+                    }
+                }
+
+                Text {
+                    visible: expanded;
+                    text: "Convex";
+                    color: #202124;
+                    font-size: 18px;
+                    font-weight: 700;
+                    vertical-alignment: center;
+                }
+            }
+        }
+
+        Rectangle {
+            min-height: 1px;
+            background: #e0e0e0;
+        }
+
+        // MenuItemList
+
+        VerticalLayout {
+            height: 100%;
+        }
+    }
+}
+
+component BottonBar inherits Rectangle {
+    height: 64px;
+    background: #ffffff;
+    drop-shadow-offset-x: 0px;
+    drop-shadow-offset-y: -2px;
+    drop-shadow-blur: 8px;
+    drop-shadow-color: rgba(0, 0, 0, 0.06);
+
+    HorizontalLayout {
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        alignment: space-around;
+        height: 100%;
+
+        // MenuItemList
+    }
+}
+
+export component NavBar inherits Rectangle {
+    in property <length> window-width;
+    in property <bool> reading;
+
+    private property <bool> is-mobile: window-width < 640px;
+
+    SideBar {
+        visible: !is-mobile;
+        window-width: window-width;
+    }
+
+    BottonBar {
+        visible: is-mobile;
+    }
+}
