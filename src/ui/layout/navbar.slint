@@ -1,3 +1,5 @@
+import { Theme } from "theme.slint";
+
 component MenuItem inherits Rectangle {
     in property <string> title;
     in property <image> icon;
@@ -6,21 +8,21 @@ component MenuItem inherits Rectangle {
 
     callback clicked();
 
-    min-width: expanded ? 220px : 44px;
-    min-height: 44px;
-    border-radius: 12px;
-    background: item_area.has-hover ? #f1f3f4 : transparent;
-    animate background { duration: 150ms; }
+    min-width: expanded ? 220px : Theme.sidebar-collapsed;
+    min-height: Theme.menu-item-min-height;
+    border-radius: Theme.radius-lg;
+    background: item_area.has-hover ? Theme.surface-hover : transparent;
+    animate background { duration: Theme.duration-fast; }
 
     states [
         active-active when active: {
-            background: #e8f0fe;
+            background: Theme.surface-active;
         }
         active-pressed when active && item_area.pressed: {
-            background: #d2e3fc;
+            background: Theme.surface-pressed;
         }
         pressed when !active && item_area.pressed: {
-            background: #d2e3fc;
+            background: Theme.surface-pressed;
         }
     ]
 
@@ -34,34 +36,34 @@ component MenuItem inherits Rectangle {
         }
 
         HorizontalLayout {
-            padding-left: 12px;
-            padding-right: 12px;
-            padding-top: 8px;
-            padding-bottom: 8px;
-            spacing: 12px;
+            padding-left: Theme.spacing-md;
+            padding-right: Theme.spacing-md;
+            padding-top: Theme.padding-xs;
+            padding-bottom: Theme.padding-xs;
+            spacing: Theme.spacing-md;
             alignment: start;
 
             Rectangle {
-                width: 28px;
-                height: 28px;
-                border-radius: 6px;
-                background: active ? #1a73e8 : transparent;
-                animate background { duration: 150ms; }
+                width: Theme.icon-box;
+                height: Theme.icon-box;
+                border-radius: Theme.radius-sm;
+                background: active ? Theme.primary : transparent;
+                animate background { duration: Theme.duration-fast; }
 
                 Image {
-                    width: 20px;
-                    height: 20px;
+                    width: Theme.icon-size;
+                    height: Theme.icon-size;
                     source: icon;
-                    colorize: active ? white : #5f6368;
+                    colorize: active ? Theme.on-primary : Theme.text-secondary;
                 }
             }
 
             Text {
                 visible: expanded;
                 text: title;
-                color: active ? #1a73e8 : #202124;
-                font-size: 14px;
-                font-weight: active ? 600 : 400;
+                color: active ? Theme.primary : Theme.text-primary;
+                font-size: Theme.font-size-sm;
+                font-weight: active ? Theme.font-weight-semibold : Theme.font-weight-normal;
                 vertical-alignment: center;
                 horizontal-alignment: start;
                 overflow: elide;
@@ -74,16 +76,18 @@ component MenuItem inherits Rectangle {
 component SideBar inherits Rectangle {
     in property <length> window-width;
 
-    private property <bool> expanded: window-width >= 800px;
+    private property <length> collapsed-width: Theme.sidebar-collapsed;
 
-    width: expanded ? 250px : 64px;
-    background: #fafafa;
+    private property <bool> expanded: window-width >= Theme.bp-sidebar;
+
+    width: expanded ? Theme.sidebar-expanded : collapsed-width;
+    background: Theme.surface-sidebar;
     drop-shadow-offset-x: 2px;
     drop-shadow-offset-y: 0px;
-    drop-shadow-blur: 8px;
-    drop-shadow-color: rgba(0, 0, 0, 0.06);
+    drop-shadow-blur: Theme.shadow-blur;
+    drop-shadow-color: Theme.shadow;
     animate width {
-        duration: 200ms;
+        duration: Theme.duration-normal;
         easing: ease-out;
     }
 
@@ -91,39 +95,39 @@ component SideBar inherits Rectangle {
         x: parent.width - 1px;
         width: 1px;
         height: 100%;
-        background: #e0e0e0;
+        background: Theme.divider;
     }
 
     VerticalLayout {
-        padding-left: 8px;
-        padding-right: 8px;
-        padding-top: 16px;
-        padding-bottom: 16px;
-        spacing: 4px;
+        padding-left: Theme.padding-xs;
+        padding-right: Theme.padding-xs;
+        padding-top: Theme.padding-md;
+        padding-bottom: Theme.padding-md;
+        spacing: Theme.spacing-xs;
         height: 100%;
 
         Rectangle {
-            min-height: 48px;
+            min-height: Theme.brand-area-min-height;
 
             HorizontalLayout {
-                padding-left: 12px;
-                padding-right: 12px;
-                padding-top: 8px;
-                padding-bottom: 8px;
-                spacing: 12px;
+                padding-left: Theme.spacing-md;
+                padding-right: Theme.spacing-md;
+                padding-top: Theme.padding-xs;
+                padding-bottom: Theme.padding-xs;
+                spacing: Theme.spacing-md;
                 alignment: start;
 
                 Rectangle {
-                    width: 28px;
-                    height: 28px;
-                    border-radius: 6px;
-                    background: #1a73e8;
+                    width: Theme.brand-logo-size;
+                    height: Theme.brand-logo-size;
+                    border-radius: Theme.radius-sm;
+                    background: Theme.primary;
 
                     Text {
                         text: "C";
-                        color: white;
-                        font-size: 16px;
-                        font-weight: 700;
+                        color: Theme.on-primary;
+                        font-size: Theme.font-size-md;
+                        font-weight: Theme.font-weight-bold;
                         horizontal-alignment: center;
                         vertical-alignment: center;
                     }
@@ -132,9 +136,9 @@ component SideBar inherits Rectangle {
                 Text {
                     visible: expanded;
                     text: "Convex";
-                    color: #202124;
-                    font-size: 18px;
-                    font-weight: 700;
+                    color: Theme.text-primary;
+                    font-size: Theme.font-size-lg;
+                    font-weight: Theme.font-weight-bold;
                     vertical-alignment: center;
                 }
             }
@@ -142,7 +146,7 @@ component SideBar inherits Rectangle {
 
         Rectangle {
             min-height: 1px;
-            background: #e0e0e0;
+            background: Theme.divider;
         }
 
         // MenuItemList
@@ -154,18 +158,18 @@ component SideBar inherits Rectangle {
 }
 
 component BottonBar inherits Rectangle {
-    height: 64px;
-    background: #ffffff;
+    height: Theme.bottom-bar-height;
+    background: Theme.surface-bottom-bar;
     drop-shadow-offset-x: 0px;
     drop-shadow-offset-y: -2px;
-    drop-shadow-blur: 8px;
-    drop-shadow-color: rgba(0, 0, 0, 0.06);
+    drop-shadow-blur: Theme.shadow-blur;
+    drop-shadow-color: Theme.shadow;
 
     HorizontalLayout {
-        padding-left: 16px;
-        padding-right: 16px;
-        padding-top: 4px;
-        padding-bottom: 4px;
+        padding-left: Theme.padding-md;
+        padding-right: Theme.padding-md;
+        padding-top: Theme.spacing-xs;
+        padding-bottom: Theme.spacing-xs;
         alignment: space-around;
         height: 100%;
 
@@ -177,7 +181,7 @@ export component NavBar inherits Rectangle {
     in property <length> window-width;
     in property <bool> reading;
 
-    private property <bool> is-mobile: window-width < 640px;
+    private property <bool> is-mobile: window-width < Theme.bp-mobile;
 
     SideBar {
         visible: !is-mobile;
