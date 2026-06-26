@@ -1,5 +1,6 @@
 import { NavBar } from "layout/navbar.slint";
 import { Theme } from "theme.slint";
+import { HomePage } from "views/home.slint";
 
 export component App inherits Window {
     width: 1024px;
@@ -14,4 +15,6 @@ export component App inherits Window {
         window-width: root.width;
         reading: reading;
     }
+
+    HomePage { }
 }
