@@ -1,3 +1,21 @@
+import { ComicCard } from "../components/comic-card.slint";
+import { Comic } from "../types.slint";
+
+component History {
+
+    in property <[Comic]> reading-history;
+
+    VerticalLayout {
+
+        for comic in reading-history: ComicCard {
+            name: comic.title;
+            cover: comic.cover;
+            source: comic.source;
+            comic-id: comic.comic-id;
+        }
+    }
+}
+
 export component HomePage inherits Rectangle {
-    
+    History { }
 }
