@@ -1,0 +1,59 @@
+import { Theme } from "../theme.slint";
+import { Button } from "std-widgets.slint";
+
+component SectionHeader {
+    in property <string> title;
+
+    callback clicked();
+
+    width: 100%;
+
+    HorizontalLayout {
+        alignment: space-between;
+
+        Text {
+            text: title;
+            font-size: Theme.font-size-md;
+            font-weight: Theme.font-weight-semibold;
+            color: Theme.text-primary;
+            vertical-alignment: center;
+        }
+
+        Button {
+            text: "▶";
+            width: 24px;
+            height: 24px;
+            clicked => {
+                root.clicked();
+            }
+        }
+    }
+}
+
+export component Section {
+    in property <string> title;
+
+    callback clicked();
+
+    Rectangle {
+        width: 100%;
+        border-radius: Theme.radius-lg;
+        border-width: 1px;
+        border-color: Theme.divider;
+        background: white;
+
+        VerticalLayout {
+            padding: Theme.padding-md;
+            spacing: Theme.spacing-sm;
+
+            SectionHeader {
+                title: title;
+                clicked => {
+                    root.clicked();
+                }
+            }
+
+            @children
+        }
+    }
+}
