@@ -1,66 +1,25 @@
 import { Theme } from "../theme.slint";
-import { ComicCard } from "../components/comic-card.slint";
 import { Comic } from "../types.slint";
+
+import { ComicCard } from "../components/comic-card.slint";
+import { Section } from "../components/section.slint";
+import { Tag } from "../components/tag.slint";
 
 component History {
     in property <[Comic]> reading-history;
 
-    private property <bool> expanded;
+    callback clicked();
 
-    width: 100%;
+    Section {
+        title: "历史";
 
-    VerticalLayout {
-        spacing: 0;
-
-        TouchArea {
-            width: 100%;
-            min-height: Theme.menu-item-min-height;
-            mouse-cursor: MouseCursor.pointer;
-
-            clicked => {
-                expanded = !expanded;
-            }
-
-            Rectangle {
-                width: 100%;
-                height: 100%;
-                border-radius: Theme.radius-lg;
-                background: ta.has-hover ? Theme.surface-hover : transparent;
-
-                ta := TouchArea { }
-
-                HorizontalLayout {
-                    padding-left: Theme.padding-xs;
-                    padding-right: Theme.padding-sm;
-                    padding-top: Theme.padding-xs;
-                    padding-bottom: Theme.padding-xs;
-                    alignment: start;
-
-                    Text {
-                        text: "历史";
-                        font-size: Theme.font-size-md;
-                        font-weight: Theme.font-weight-semibold;
-                        color: Theme.text-primary;
-                        vertical-alignment: center;
-                    }
-
-                    Rectangle {
-                        width: 0px;
-                        height: 0px;
-                    }
-
-                    Text {
-                        text: expanded ? "▼" : "▶";
-                        font-size: 12px;
-                        color: Theme.text-secondary;
-                        vertical-alignment: center;
-                    }
-                }
-            }
+        width: 100%;
+        clicked => {
+            root.clicked();
         }
 
-        if expanded: VerticalLayout {
-            padding-left: Theme.padding-md;
+        HorizontalLayout {
+            min-height: 160px;
             spacing: Theme.spacing-sm;
 
             for comic in reading-history: ComicCard {
@@ -69,12 +28,6 @@ component History {
                 source: comic.source;
                 comic-id: comic.comic-id;
             }
-
-            if (reading-history.length == 0): Text {
-                text: "暂无历史记录";
-                font-size: Theme.font-size-sm;
-                color: Theme.text-secondary;
-            }
         }
     }
 }
@@ -82,62 +35,18 @@ component History {
 component Local {
     in property <[Comic]> local-comics;
 
-    private property <bool> expanded;
+    callback clicked();
 
-    width: 100%;
+    Section {
+        title: "本地";
 
-    VerticalLayout {
-        spacing: 0;
-
-        TouchArea {
-            width: 100%;
-            min-height: Theme.menu-item-min-height;
-            mouse-cursor: MouseCursor.pointer;
-
-            clicked => {
-                expanded = !expanded;
-            }
-
-            Rectangle {
-                width: 100%;
-                height: 100%;
-                border-radius: Theme.radius-lg;
-                background: ta.has-hover ? Theme.surface-hover : transparent;
-
-                ta := TouchArea { }
-
-                HorizontalLayout {
-                    padding-left: Theme.padding-xs;
-                    padding-right: Theme.padding-sm;
-                    padding-top: Theme.padding-xs;
-                    padding-bottom: Theme.padding-xs;
-                    alignment: start;
-
-                    Text {
-                        text: "本地";
-                        font-size: Theme.font-size-md;
-                        font-weight: Theme.font-weight-semibold;
-                        color: Theme.text-primary;
-                        vertical-alignment: center;
-                    }
-
-                    Rectangle {
-                        width: 0px;
-                        height: 0px;
-                    }
-
-                    Text {
-                        text: expanded ? "▼" : "▶";
-                        font-size: 12px;
-                        color: Theme.text-secondary;
-                        vertical-alignment: center;
-                    }
-                }
-            }
+        width: 100%;
+        clicked => {
+            root.clicked();
         }
 
-        if expanded: VerticalLayout {
-            padding-left: Theme.padding-md;
+        HorizontalLayout {
+            min-height: 160px;
             spacing: Theme.spacing-sm;
 
             for comic in local-comics: ComicCard {
@@ -146,209 +55,70 @@ component Local {
                 source: comic.source;
                 comic-id: comic.comic-id;
             }
-
-            if (local-comics.length == 0): Text {
-                text: "暂无本地漫画";
-                font-size: Theme.font-size-sm;
-                color: Theme.text-secondary;
-            }
         }
     }
 }
 
 component Following {
-    private property <bool> expanded;
+    callback clicked();
 
-    width: 100%;
+    Section {
+        title: "追更";
 
-    VerticalLayout {
-        spacing: 0;
+        width: 100%;
+        clicked => {
+            root.clicked();
+        }
 
-        TouchArea {
+        Rectangle {
+            min-height: 160px;
             width: 100%;
-            min-height: Theme.menu-item-min-height;
-            mouse-cursor: MouseCursor.pointer;
-
-            clicked => {
-                expanded = !expanded;
-            }
-
-            Rectangle {
-                width: 100%;
-                height: 100%;
-                border-radius: Theme.radius-lg;
-                background: ta.has-hover ? Theme.surface-hover : transparent;
-
-                ta := TouchArea { }
-
-                HorizontalLayout {
-                    padding-left: Theme.padding-xs;
-                    padding-right: Theme.padding-sm;
-                    padding-top: Theme.padding-xs;
-                    padding-bottom: Theme.padding-xs;
-                    alignment: start;
-
-                    Text {
-                        text: "追更";
-                        font-size: Theme.font-size-md;
-                        font-weight: Theme.font-weight-semibold;
-                        color: Theme.text-primary;
-                        vertical-alignment: center;
-                    }
-
-                    Rectangle {
-                        width: 0px;
-                        height: 0px;
-                    }
-
-                    Text {
-                        text: expanded ? "▼" : "▶";
-                        font-size: 12px;
-                        color: Theme.text-secondary;
-                        vertical-alignment: center;
-                    }
-                }
-            }
         }
     }
 }
 
 component Sources {
-    in property <[Comic]> source-comics;
+    in property <[string]> source-list;
 
-    private property <bool> expanded;
+    callback clicked();
 
-    width: 100%;
+    Section {
+        title: "漫画源";
 
-    VerticalLayout {
-        spacing: 0;
-
-        TouchArea {
-            width: 100%;
-            min-height: Theme.menu-item-min-height;
-            mouse-cursor: MouseCursor.pointer;
-
-            clicked => {
-                expanded = !expanded;
-            }
-
-            Rectangle {
-                width: 100%;
-                height: 100%;
-                border-radius: Theme.radius-lg;
-                background: ta.has-hover ? Theme.surface-hover : transparent;
-
-                ta := TouchArea { }
-
-                HorizontalLayout {
-                    padding-left: Theme.padding-xs;
-                    padding-right: Theme.padding-sm;
-                    padding-top: Theme.padding-xs;
-                    padding-bottom: Theme.padding-xs;
-                    alignment: start;
-
-                    Text {
-                        text: "漫画源";
-                        font-size: Theme.font-size-md;
-                        font-weight: Theme.font-weight-semibold;
-                        color: Theme.text-primary;
-                        vertical-alignment: center;
-                    }
-
-                    Rectangle {
-                        width: 0px;
-                        height: 0px;
-                    }
-
-                    Text {
-                        text: expanded ? "▼" : "▶";
-                        font-size: 12px;
-                        color: Theme.text-secondary;
-                        vertical-alignment: center;
-                    }
-                }
-            }
+        width: 100%;
+        clicked => {
+            root.clicked();
         }
 
-        if expanded: VerticalLayout {
-            padding-left: Theme.padding-md;
+        HorizontalLayout {
             spacing: Theme.spacing-sm;
 
-            for comic in source-comics: ComicCard {
-                name: comic.title;
-                cover: comic.cover;
-                source: comic.source;
-                comic-id: comic.comic-id;
-            }
-
-            if (source-comics.length == 0): Text {
-                text: "暂无漫画源";
-                font-size: Theme.font-size-sm;
-                color: Theme.text-secondary;
+            for source in source-list: Tag {
+                text: source;
             }
         }
     }
 }
 
 component ImageCollection {
-    private property <bool> expanded;
+    callback clicked();
 
-    width: 100%;
+    Section {
+        title: "图片收藏";
 
-    VerticalLayout {
-        spacing: 0;
+        width: 100%;
+        clicked => {
+            root.clicked();
+        }
 
-        TouchArea {
+        Rectangle {
+            min-height: 160px;
             width: 100%;
-            min-height: Theme.menu-item-min-height;
-            mouse-cursor: MouseCursor.pointer;
-
-            clicked => {
-                expanded = !expanded;
-            }
-
-            Rectangle {
-                width: 100%;
-                height: 100%;
-                border-radius: Theme.radius-lg;
-                background: ta.has-hover ? Theme.surface-hover : transparent;
-
-                ta := TouchArea { }
-
-                HorizontalLayout {
-                    padding-left: Theme.padding-xs;
-                    padding-right: Theme.padding-sm;
-                    padding-top: Theme.padding-xs;
-                    padding-bottom: Theme.padding-xs;
-                    alignment: start;
-
-                    Text {
-                        text: "图片收藏";
-                        font-size: Theme.font-size-md;
-                        font-weight: Theme.font-weight-semibold;
-                        color: Theme.text-primary;
-                        vertical-alignment: center;
-                    }
-
-                    Rectangle {
-                        width: 0px;
-                        height: 0px;
-                    }
-
-                    Text {
-                        text: expanded ? "▼" : "▶";
-                        font-size: 12px;
-                        color: Theme.text-secondary;
-                        vertical-alignment: center;
-                    }
-                }
-            }
         }
     }
 }
 
 export component HomePage inherits Rectangle {
-
     background: Theme.surface-sidebar;
 
     Flickable {
@@ -357,17 +127,37 @@ export component HomePage inherits Rectangle {
 
         VerticalLayout {
             padding: Theme.padding-md;
-            spacing: Theme.spacing-xs;
+            spacing: 24px;
 
-            History { }
+            History {
+                clicked => {
+                    // Navigate to history page
+                }
+            }
 
-            Local { }
+            Local {
+                clicked => {
+                    // Navigate to local page
+                }
+            }
 
-            Following { }
+            Following {
+                clicked => {
+                    // Navigate to following page
+                }
+            }
 
-            Sources { }
+            Sources {
+                clicked => {
+                    // Navigate to sources page
+                }
+            }
 
-            ImageCollection { }
+            ImageCollection {
+                clicked => {
+                    // Navigate to image collection page
+                }
+            }
         }
     }
 }
